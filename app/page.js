@@ -1,113 +1,203 @@
-import Image from 'next/image'
+"use client";
+import { useState } from "react";
+import useSound from "use-sound";
+import { VictoryBar } from "victory";
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+	const stateArray = Array.from({ length: 50 }, () => ({
+		value: Math.floor(Math.random() * 10) + 1,
+	}));
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+	const [numbers, setNumbers] = useState(stateArray);
+	const [alg, setAlg] = useState("");
+	const [arrayLength, setArrayLength] = useState("");
+	let componentToRender;
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+	const [play] = useSound("/sounds/glug-a.mp3");
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+	const Chart = ({ chartNumbers }) => {
+		return (
+			<div className="flex justify-center items-center h-full">
+				<VictoryBar data={chartNumbers} y="value" />
+			</div>
+		);
+	};
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
+	const generateRandomNumbers = () => {
+		const randomNumbers = [{ value: 1 }];
+		if (arrayLength == "") {
+			return randomNumbers;
+		} else {
+			for (let i = 0; i < arrayLength; i++) {
+				const randomNumber = Math.floor(Math.random() * 1000) + 1;
+				randomNumbers.push({ value: randomNumber });
+			}
+		}
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+		return randomNumbers;
+	};
+
+	const bubbleSort = (arr) => {
+		let swapped = true;
+		const len = arr.length;
+
+		const sortStep = () => {
+			swapped = false;
+			for (let i = 0; i < len - 1; i++) {
+				if (arr[i].value > arr[i + 1].value) {
+					play(); // sound
+					const temp = arr[i];
+					arr[i] = arr[i + 1];
+					arr[i + 1] = temp;
+					swapped = true;
+					break;
+				}
+			}
+			setNumbers([...arr]);
+		};
+
+		const sortingInterval = setInterval(() => {
+			if (!swapped) {
+				clearInterval(sortingInterval);
+				console.log("Sorting complete");
+			} else {
+				sortStep();
+			}
+		}, 0);
+	};
+
+	const handleBubblePress = () => {
+		const randomNumbers = generateRandomNumbers();
+		setNumbers(randomNumbers);
+		bubbleSort(randomNumbers);
+	};
+
+	switch (alg) {
+		case "":
+			componentToRender = (
+				<div className="flex flex-col space-y-2 justify-center">
+					<button
+						onClick={() => setAlg("bubble")}
+						className="bg-red-400 text-white p-4 rounded"
+					>
+						Bubble Sort
+					</button>
+					<button
+						onClick={() => setAlg("insertion")}
+						className="bg-green-400 text-white p-4 rounded"
+					>
+						Insertion
+					</button>
+					<button
+						onClick={() => setAlg("selection")}
+						className="bg-yellow-400 text-white p-4 rounded"
+					>
+						Selection
+					</button>
+					<button
+						onClick={() => setAlg("merge")}
+						className="bg-purple-400 text-white p-4 rounded"
+					>
+						Merge
+					</button>
+					<button
+						onClick={() => setAlg("quick")}
+						className="bg-blue-400 text-white p-4 rounded"
+					>
+						Quick Sort
+					</button>
+				</div>
+			);
+			break;
+		case "bubble":
+			componentToRender = (
+				<div>
+					<div className="place-items-center flex space-x-20 bg-red-200 w-screen justify-around py-2">
+						<h1>Bubble Sort</h1>
+						<div className="flex space-x-5">
+							<input
+								placeholder="Array Length"
+								className="rounded p-2"
+								value={arrayLength}
+								onChange={(e) => setArrayLength(e.target.value)}
+							></input>
+							<button
+								onClick={handleBubblePress}
+								className="bg-green-700 text-white text-sm p-2 rounded"
+							>
+								Start
+							</button>
+						</div>
+						<button
+							onClick={() => setAlg("")}
+							className="bg-red-400 text-white p-3 rounded"
+						>
+							Back
+						</button>
+					</div>
+					<Chart chartNumbers={numbers} />
+				</div>
+			);
+			break;
+		case "insertion":
+			componentToRender = (
+				<div>
+					<h1>Insertion</h1>
+					<button
+						onClick={() => setAlg("")}
+						className="bg-red-400 text-white p-4 rounded"
+					>
+						Back
+					</button>
+				</div>
+			);
+			break;
+		case "selection":
+			componentToRender = (
+				<div>
+					<h1>Selection</h1>
+					<button
+						onClick={() => setAlg("")}
+						className="bg-red-400 text-white p-4 rounded"
+					>
+						Back
+					</button>
+				</div>
+			);
+			break;
+		case "merge":
+			componentToRender = (
+				<div>
+					<h1>Merge</h1>
+					<button
+						onClick={() => setAlg("")}
+						className="bg-red-400 text-white p-4 rounded"
+					>
+						Back
+					</button>
+				</div>
+			);
+			break;
+		case "quick":
+			componentToRender = (
+				<div>
+					<h1>Quick Sort</h1>
+					<button
+						onClick={() => setAlg("")}
+						className="bg-red-400 text-white p-4 rounded"
+					>
+						Back
+					</button>
+				</div>
+			);
+			break;
+		default:
+			componentToRender = null;
+	}
+
+	return (
+		<main className="flex justify-center  bg-red-50 min-h-screen">
+			{componentToRender}
+		</main>
+	);
 }
